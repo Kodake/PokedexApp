@@ -15,6 +15,13 @@ const globalStyles = StyleSheet.create({
     title: {
         fontSize: 35,
         fontWeight: 'bold'
+    },
+    activityLoading: {
+        height: 100
+    },
+    pokemonPicture: {
+        width: 100,
+        height: 100
     }
 });
 
