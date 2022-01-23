@@ -1,11 +1,13 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { RootStackParams } from '../navigator/Navigator';
 import FadeInImage from '../components/FadeInImage';
 import globalStyles from '../theme/appTheme';
+import { usePokemon } from '../hooks/usePokemon';
+import PokemonDetails from '../components/PokemonDetails';
 
 
 interface Props extends StackScreenProps<RootStackParams, 'PokemonScreen'> { };
@@ -16,8 +18,10 @@ const PokemonScreen = ({ navigation, route }: Props) => {
     const { id, name, picture } = simplePokemon;
     const { top } = useSafeAreaInsets();
 
+    const { isLoading, pokemon } = usePokemon(id);
+
     return (
-        <View>
+        <View style={styles.pokemonMainContainer}>
             {/* Header container */}
             <View
                 style={{
@@ -64,12 +68,30 @@ const PokemonScreen = ({ navigation, route }: Props) => {
                     uri={picture}
                     style={styles.pokemonImage}
                 />
+
             </View>
+
+            {/* Detalles y loading */}
+            {
+                isLoading
+                    ? (
+                        <View style={styles.loadingIndicator}>
+                            <ActivityIndicator
+                                color={color}
+                                size={50}
+                            />
+                        </View>
+                    )
+                    : <PokemonDetails pokemon={pokemon} />
+            }
         </View>
     )
 };
 
 const styles = StyleSheet.create({
+    pokemonMainContainer: {
+        flex: 1
+    },
     pokemonDetailHeaderContainer: {
         height: 370,
         zIndex: 999,
@@ -98,6 +120,11 @@ const styles = StyleSheet.create({
         height: 250,
         position: 'absolute',
         bottom: -30
+    },
+    loadingIndicator: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
